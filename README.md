@@ -5,13 +5,24 @@
 [![Discord](https://img.shields.io/discord/1494838577526341742?label=Discord&logo=discord&logoColor=white&style=flat-square&color=5865F2)](https://discord.gg/2JSun56hFY)
 [![GitHub last commit](https://img.shields.io/github/last-commit/origamidb/origamidb?style=flat-square)](https://github.com/origamidb/origamidb/commits/main)
 
-an embeddable database with a distributed consensus model drawing from ideas used in CRDTs.
+An embeddable database with a novel distributed consensus model drawing from ideas used in CRDTs.
 
-origamidb is built in layers of composed Rust traits. porting to a new storage medium requires implementing one trait — `PageStore` — at the bottom of the stack. the write path is a deterministic synchronous state machine; side effects are returned as intent for an outer runtime to reconcile, which keeps the core portable across runtime environments and machine architectures.
+> **Status:** pre-implementation. The design is captured in [`ARCHITECTURE.md`](ARCHITECTURE.md) and elaborated under [`docs/`](docs/). There is no source code yet beyond a stub.
 
-> **Status:** pre-implementation. the design is captured in [`ARCHITECTURE.md`](ARCHITECTURE.md) and elaborated under [`docs/`](docs/). there is no source code yet beyond a stub.
+## Why
 
-## Design
+Systems that need data to live in more than one place are built today by gluing together several databases and the plumbing between them. OrigamiDB's design collapses those assemblies into a single engine.
+
+- **Offline-first applications** currently require SQLite on the device, a sync layer (custom, ElectricSQL, PowerSync, Realm, or similar), a server database, and conflict resolution logic on top. OrigamiDB is one engine with a native consensus model — the same codebase embedded on the device and on the server, designed to converge without a separate sync layer.
+- **Multi-shape data** currently requires Postgres plus a search index plus a warehouse plus ETL pipelines between them. Multiple folds over the same linearized operation log produce multiple read-optimized projections from a single write path, without ETL infrastructure.
+- **Edge and IoT** currently require choosing between something that runs on constrained hardware and something that syncs with cloud. OrigamiDB targets both from the same codebase, with the lower layers allocation-free.
+- **The Rust ecosystem** has embeddable key-value engines (Fjall) and distributed key-value engines (TiKV), and nothing that is embeddable, distributed, and convergent at once.
+
+The guiding architectural maxim is **make illegal states irrepresentable — at the database layer, at scale**. Existing convergent systems either coordinate globally (Raft, Paxos) or accept that global invariants cannot be enforced across peers (traditional CRDTs). OrigamiDB's design linearizes concurrent operations at the sync boundary, so invariants become predicates in the fold and are enforced across peers without coordination beyond the sync that is already happening. For tangentially related points on synchronization, see Rich Harris, *Rethinking Reactivity*.
+
+## Architecture
+
+OrigamiDB is built in layers of composed Rust traits. Porting to a new storage medium requires implementing one trait — `PageStore` — at the bottom of the stack. The write path is a deterministic synchronous state machine; side effects are returned as intent for an outer runtime to reconcile, which keeps the core extremely portable across runtime environments and machine architectures.
 
 [`ARCHITECTURE.md`](ARCHITECTURE.md) is the worldview — the layer stack, the architectural invariants, and the cross-cutting concerns. Deeper specification lives in [`docs/spec/`](docs/spec/) (in progress). Substantial proposals go through the RFC process under [`rfcs/`](rfcs/); decisions are recorded as ADRs under [`docs/adr/`](docs/adr/).
 
