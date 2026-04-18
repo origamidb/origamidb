@@ -18,7 +18,7 @@ Systems that need data to live in more than one place are built today by gluing 
 - **Edge and IoT** currently require choosing between something that runs on constrained hardware and something that syncs with cloud. OrigamiDB targets both from the same codebase, with the lower layers allocation-free.
 - **The Rust ecosystem** has embeddable key-value engines (Fjall) and distributed key-value engines (TiKV), and nothing that is embeddable, distributed, and convergent at once.
 
-The guiding architectural maxim is **make illegal states irrepresentable — at the database layer, at scale**. Existing convergent systems either coordinate globally (Raft, Paxos) or accept that global invariants cannot be enforced across peers (traditional CRDTs). OrigamiDB's design linearizes concurrent operations at the sync boundary, so invariants become predicates in the fold and are enforced across peers without coordination beyond the sync that is already happening. For tangentially related points on synchronization, see Rich Harris, *Rethinking Reactivity*.
+Existing convergent systems either coordinate globally (Raft, Paxos) or accept that global invariants cannot be enforced across peers (traditional CRDTs). OrigamiDB's design linearizes concurrent operations at the sync boundary, so invariants become predicates in the fold and are enforced across peers without coordination beyond the sync that is already happening.
 
 ## Architecture
 
