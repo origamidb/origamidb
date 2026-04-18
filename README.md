@@ -1,5 +1,10 @@
 # origamidb
 
+[![License: MIT or Apache-2.0](https://img.shields.io/badge/license-MIT%20or%20Apache--2.0-blue?style=flat-square)](#license)
+![Status: pre-implementation](https://img.shields.io/badge/status-pre--implementation-orange?style=flat-square)
+[![Discord](https://img.shields.io/discord/1494838577526341742?label=Discord&logo=discord&logoColor=white&style=flat-square&color=5865F2)](https://discord.gg/2JSun56hFY)
+[![GitHub last commit](https://img.shields.io/github/last-commit/origamidb/origamidb?style=flat-square)](https://github.com/origamidb/origamidb/commits/main)
+
 origami is an embeddable database
 
 it aims to implement a novel distributed consensus model drawing from ideas used in CRDTs
