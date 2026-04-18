@@ -26,7 +26,7 @@ Each layer is a Rust trait, generic over the layer beneath it. Implementations a
 
 - **`PageStore`** — raw byte-level reads and writes against the underlying medium. All externally observable mutation is confined here. A `no_std` implementation can operate over a pre-allocated memory region; a Linux implementation can be a memory-mapped file; any blob store is a candidate.
 
-- **`KVStore`** — ordered key-value lookup structures over `PageStore`. The choice of data structure (LSM tree, B-tree, sorted array, skip list) is an implementation detail of this layer. The value associated with a key is opaque to the KVStore.
+- **`KVStore`** — ordered key-value lookup structures over `PageStore`. The choice of data structure (LSM tree, B-tree, sorted array, skip list) is an implementation detail of this layer; the intended first implementation is B-tree. The value associated with a key is opaque to the KVStore.
 
 - **`RelationalStore`** — secondary indices, schema, and structural metadata over the key-value layer. Whether schema can be enforced at compile time (eliminating runtime checks on the hot path) is an open design question.
 
