@@ -4,15 +4,14 @@ This folder holds the project's longer-form documentation.
 
 ## What lives here
 
-**Curated:**
+**Curated** — reviewed, treated as stable reference:
 
-- **`spec/`** — the OrigamiDB specification. Reviewed, authoritative as the project's design grows. Currently a placeholder awaiting the first authoritative draft.
+- [`spec/`](spec/) — the OrigamiDB specification (per layer / per concern). Currently a placeholder awaiting the first authoritative draft.
+- [`adr/`](adr/) — architecture decision records. Append-only log of accepted decisions. See [`adr/README.md`](adr/README.md).
 
-The curated layer is meant to stay small and high-signal. Material here is reviewed before it lands and is treated as a stable reference.
+**Append-only** — low-ceremony, exploratory, not authoritative:
 
-**Append-only (convention reserved):**
-
-A `notes/` folder for topical notes, design explorations, and working drafts that don't yet belong in the curated layer is reserved by convention. Low ceremony to add when needed. Not authoritative on the design.
+- [`notes/`](notes/) — working drafts, design exploration, mining notes from external research. See [`notes/README.md`](notes/README.md).
 
 ## Pointers
 
