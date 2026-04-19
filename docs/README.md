@@ -4,7 +4,7 @@ This folder holds the project's longer-form documentation.
 
 ## What lives here
 
-- [`spec/`](spec/) — the OrigamiDB specification (per layer / per concern). Currently a placeholder awaiting the first authoritative draft.
+- [`design/`](design/) — per-layer design pages for OrigamiDB. Currently a placeholder awaiting the first authoritative draft.
 - [`adr/`](adr/) — architecture decision records. Append-only log of accepted decisions. See [`adr/README.md`](adr/README.md).
 
 ## Pointers

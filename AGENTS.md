@@ -38,7 +38,7 @@ When a task seems to require any of these, stop and open a GitHub issue for disc
 - **Branches.** Feature branches off `main`. Squash-merge to `main`.
 - **Commits.** Imperative-mood subjects (`add foo`, not `added foo`). Body explains *why* when not obvious from the diff.
 - **PRs.** One concern per PR. If a task implies secondary changes, open them as separate PRs.
-- **Substantive changes.** Architectural changes — a new layer, a change to an invariant, sync protocol or foldable-trait or storage format decisions, anything touching `docs/spec/` — are discussed in a GitHub issue before implementation.
+- **Substantive changes.** Architectural changes — a new layer, a change to an invariant, sync protocol or foldable-trait or storage format decisions, anything touching `docs/design/` — are discussed in a GitHub issue before implementation.
 - **Licensing.** Contributions are dual-licensed under MIT and Apache-2.0 by default. See `CONTRIBUTING.md`.
 - **Code of conduct.** All participants are bound by `CODE_OF_CONDUCT.md`.
 
@@ -60,7 +60,7 @@ This section will be expanded with project-specific commands as the toolchain st
 | Concern | Source |
 |---|---|
 | Architectural worldview, layer stack, invariants | `ARCHITECTURE.md` |
-| Specification (in progress) | `docs/spec/` |
+| Per-layer design (in progress) | `docs/design/` |
 | Social conventions, how to participate | `CONTRIBUTING.md` |
 | Code of conduct | `CODE_OF_CONDUCT.md` |
 | Security policy | `SECURITY.md` |
