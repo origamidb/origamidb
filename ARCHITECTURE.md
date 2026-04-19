@@ -2,7 +2,7 @@
 
 OrigamiDB is an embeddable database with a distributed consensus model drawing from ideas used in CRDTs. It is built in layers of composed Rust traits. Porting to a new storage medium requires implementing one trait at the bottom of the stack.
 
-This document is the worldview. It states the architectural invariants and names the layers and their boundaries. For deeper specification see `docs/spec/`. For the proposal process see `rfcs/`. For guidance specific to LLM-assisted contributors see [AGENTS.md](AGENTS.md).
+This document is the worldview. It states the architectural invariants and names the layers and their boundaries. For deeper specification see `docs/spec/`. For guidance specific to LLM-assisted contributors see [AGENTS.md](AGENTS.md).
 
 ## Architectural invariants
 
@@ -53,6 +53,5 @@ The repository is pre-implementation. This is the planned shape, set so that the
 ## Where to find more
 
 - `docs/spec/` — the specification (in progress)
-- `rfcs/` — proposal process for substantive changes
 - [`AGENTS.md`](AGENTS.md) — guidance for LLM-assisted contributors
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — how to participate

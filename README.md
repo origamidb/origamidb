@@ -24,7 +24,7 @@ Existing convergent systems either coordinate globally (Raft, Paxos) or accept t
 
 OrigamiDB is built in layers of composed Rust traits. Porting to a new storage medium requires implementing one trait — `PageStore` — at the bottom of the stack. The write path is a deterministic synchronous state machine; side effects are returned as intent for an outer runtime to reconcile, which keeps the core extremely portable across runtime environments and machine architectures.
 
-[`ARCHITECTURE.md`](ARCHITECTURE.md) is the worldview — the layer stack, the architectural invariants, and the cross-cutting concerns. Deeper specification lives in [`docs/spec/`](docs/spec/) (in progress). Substantial proposals go through the RFC process under [`rfcs/`](rfcs/); decisions are recorded as ADRs under [`docs/adr/`](docs/adr/).
+[`ARCHITECTURE.md`](ARCHITECTURE.md) is the worldview — the layer stack, the architectural invariants, and the cross-cutting concerns. Deeper specification lives in [`docs/spec/`](docs/spec/) (in progress). Decisions are recorded as ADRs under [`docs/adr/`](docs/adr/).
 
 ## Community
 

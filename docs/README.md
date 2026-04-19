@@ -16,6 +16,5 @@ This folder holds the project's longer-form documentation.
 ## Pointers
 
 - [`../ARCHITECTURE.md`](../ARCHITECTURE.md) — architectural worldview, layer stack, invariants, cross-cutting concerns.
-- [`../rfcs/`](../rfcs/) — proposal process for substantive changes.
 - [`../CONTRIBUTING.md`](../CONTRIBUTING.md) — how to participate.
 - [`../AGENTS.md`](../AGENTS.md) — guidance for LLM-assisted contributors.

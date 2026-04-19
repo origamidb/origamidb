@@ -10,7 +10,7 @@ Welcome. OrigamiDB is pre-implementation; most contributions today are documenta
 ## Proposing a change
 
 - **Small fixes, documentation improvements, obvious cleanups** — open a pull request directly. Include enough context in the PR description that a reviewer understands *why*.
-- **Architectural changes** — a new layer, a change to an invariant, sync protocol or merge algorithm or storage format decisions, anything touching `docs/spec/` — open a proposal under `rfcs/` first, using `rfcs/0000-template.md`. See `rfcs/README.md` for the process. Substantive changes require maintainer review before implementation begins.
+- **Architectural changes** — a new layer, a change to an invariant, sync protocol or foldable-trait or storage format decisions, anything touching `docs/spec/` — open a GitHub issue for discussion first. Substantive changes require maintainer review before implementation begins.
 
 If you're unsure whether your change needs an RFC, ask in Discord or open a draft issue.
 

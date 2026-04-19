@@ -24,7 +24,7 @@ These are non-negotiable architectural invariants. Patches that violate any of t
 
 ## Anti-patterns to flag, not to apply
 
-When a task seems to require any of these, stop and propose an RFC instead of patching.
+When a task seems to require any of these, stop and open a GitHub issue for discussion instead of patching.
 
 - Adding `async` to make something cleaner. `async` is viral; the function-coloring problem is exactly what this design rejects.
 - Adding a `Result` variant for a recoverable condition. Restructure the types or the boundary instead.
@@ -38,7 +38,7 @@ When a task seems to require any of these, stop and propose an RFC instead of pa
 - **Branches.** Feature branches off `main`. Squash-merge to `main`.
 - **Commits.** Imperative-mood subjects (`add foo`, not `added foo`). Body explains *why* when not obvious from the diff.
 - **PRs.** One concern per PR. If a task implies secondary changes, open them as separate PRs.
-- **Substantive changes.** Architectural changes — a new layer, a change to an invariant, sync protocol or foldable-trait or storage format decisions, anything touching `docs/spec/` — go through the proposal process under `rfcs/`.
+- **Substantive changes.** Architectural changes — a new layer, a change to an invariant, sync protocol or foldable-trait or storage format decisions, anything touching `docs/spec/` — are discussed in a GitHub issue before implementation.
 - **Licensing.** Contributions are dual-licensed under MIT and Apache-2.0 by default. See `CONTRIBUTING.md`.
 - **Code of conduct.** All participants are bound by `CODE_OF_CONDUCT.md`.
 
@@ -61,7 +61,6 @@ This section will be expanded with project-specific commands as the toolchain st
 |---|---|
 | Architectural worldview, layer stack, invariants | `ARCHITECTURE.md` |
 | Specification (in progress) | `docs/spec/` |
-| Proposal process for substantive changes | `rfcs/` |
 | Social conventions, how to participate | `CONTRIBUTING.md` |
 | Code of conduct | `CODE_OF_CONDUCT.md` |
 | Security policy | `SECURITY.md` |

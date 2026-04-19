@@ -10,8 +10,6 @@ ADRs are append-only. Once accepted, an ADR is not edited substantively. Decisio
 - A constraint or invariant that has been adopted (e.g. "soft errors are not permitted in the engine").
 - A change to a previously accepted decision (the new ADR supersedes the old).
 
-If the choice is part of a larger proposal, that proposal probably belongs as an RFC under [`../../rfcs/`](../../rfcs/) instead. ADRs may be derived from accepted RFCs to capture load-bearing decisions in a form that's easy to reference.
-
 ## Process
 
 1. **Draft.** Copy [`0000-template.md`](0000-template.md) to `text/0000-short-title.md`. Fill in the sections. Open a pull request.
@@ -43,13 +41,3 @@ docs/adr/
 ## Format
 
 OrigamiDB ADRs follow a lightweight variant of [MADR](https://adr.github.io/madr/) (Markdown Architecture Decision Records). The template gives the required sections.
-
-## Relationship to RFCs
-
-ADRs and RFCs are complementary. An RFC argues for a substantive change and goes through a final comment period before acceptance — see [`../../rfcs/README.md`](../../rfcs/README.md). An ADR is a decision record: it captures what the project decided and why, in a more compact form.
-
-Some flows:
-
-- Small architectural choice that doesn't warrant a full RFC: write an ADR directly.
-- Substantive proposal with multiple architectural choices: write an RFC; on acceptance, derive ADRs for the load-bearing decisions if they will be referenced from elsewhere.
-- Decision overturned: write a new ADR that supersedes the prior one. If the change is substantial, it may also warrant an RFC.
