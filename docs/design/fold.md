@@ -41,7 +41,7 @@ Skipped events propagate to the application as a distinguishable outcome — the
 
 ## Fold as user-extensibility surface
 
-[`ARCHITECTURE.md`](../../ARCHITECTURE.md) positions application logic as "just another layer" — the top-of-stack endpoint where user code consumes the structured state the layers below construct. The fold is where that consumption attaches to the stack's own machinery. Application-shaped state is what the fold produces; extending the fold is how user code shapes that state for its own purposes.
+Application logic sits at the top of the stack (see the layer diagram in [`overview.md`](overview.md)) — the endpoint where user code consumes the structured state the layers below construct. The fold is where that consumption attaches to the stack's own machinery. Application-shaped state is what the fold produces; extending the fold is how user code shapes that state for its own purposes.
 
 A user-defined fold reads the linearized event stream the core produces and constructs whatever read-optimized state the application wants. Because the sequence is deterministic and each step is pure, a user-defined fold inherits the same properties the primary fold has: same inputs at every peer produce the same output; no coordination required beyond sync.
 

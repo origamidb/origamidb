@@ -14,7 +14,7 @@ Because the ordering function is deterministic, total, and identical at every pe
 
 The protocol is structurally the merge step of merge sort, applied to distributed event logs rather than on-disk sorted runs. The shape is the same one used in log-structured merge trees: each peer's local events are one sorted run; syncing two peers is the compaction that merges two sorted runs into a larger sorted run; the total order across the stack is the long-run invariant the merging preserves.
 
-The resemblance is not incidental. The same mechanics — sorted buffers, merge as a single linear pass, amortized ordering cost — are the reason both patterns are efficient. Implementation work at one layer can inform the other, and an implementation may be able to share code across the two processes if the trait abstractions align.
+The resemblance is not incidental. The same mechanics — sorted buffers, merge as a single linear pass, amortized ordering cost — are the reason both patterns are efficient.
 
 The resemblance does not mean the two processes are the same. An LSM compaction at the KVStore layer is an operation on an individual peer's stored pages. A sync between two peers is a cross-peer exchange that advances the linearized log. They share shape; they do not share purpose.
 
