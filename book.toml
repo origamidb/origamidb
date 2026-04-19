@@ -1,0 +1,16 @@
+[book]
+title = "OrigamiDB"
+authors = ["The OrigamiDB Authors"]
+description = "An embeddable database with a novel distributed consensus model drawing from ideas used in CRDTs."
+src = "docs"
+language = "en"
+multilingual = false
+
+[build]
+build-dir = "book"
+create-missing = false
+
+[output.html]
+site-url = "/origamidb/"
+git-repository-url = "https://github.com/origamidb/origamidb"
+edit-url-template = "https://github.com/origamidb/origamidb/edit/main/docs/{path}"

@@ -14,7 +14,7 @@ These are non-negotiable architectural invariants. Patches that violate any of t
 
 2. **Trait methods are synchronous.** The shape is `(&mut self, input) -> Output`, where `Output` may be `Option<T>` on a per-method basis — it is not universal. No `async`, no threads, no channels, no blocking inside any layer of the stack. Intended side effects of higher layers bubble up by return and may allow stateful continuations — effectively what `Future::poll` and regenerator-runtime compile into under the hood.
 
-3. **No `Result<T, E>` for soft errors.** If it is not fatal, recover. Restarting from a known-good checkpoint is a form of recovery, not a fatal condition. Conditions that look like errors are either normal (an operation rejected by an invariant predicate, returning `None` where the signature has one) or truly fatal — hardware failure, disk crashes, flash burnout, OS lying about persistence. Do not introduce error variants for partial or recoverable failure.
+3. **No `Result<T, E>` for soft errors.** If it is not fatal, recover. Restart is a form of recovery, not a fatal condition. Conditions that look like errors are either normal (a method with an `Option` return producing `None` when there is nothing to return) or truly fatal — hardware failure, disk crashes, flash burnout, OS lying about persistence. Do not introduce error variants for partial or recoverable failure.
 
 4. **Operations need not commute.** The convergence layer linearizes concurrent operations during sync. By the time the fold runs, ordering is already decided. Do not reach for vector clocks, commutativity proofs, or tombstone management inside the foldable event trait.
 
