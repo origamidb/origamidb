@@ -21,7 +21,7 @@ The layer's absences are load-bearing consequences of linearize-during-sync. Sev
 - **No vector clocks or causal metadata inside the foldable event trait's inputs.** By the time an event reaches the fold, its position is already decided. Causal context, if needed, belongs to the sync protocol's ordering or to the event type itself — not to `fold`.
 - **No tombstones managed inside the foldable event trait.** Traditional op-based CRDTs carry tombstones to handle deletion after concurrent insertion. Linearized ordering makes tombstone tracking a sync-protocol and state-layer concern, not a property of the trait on the event.
 - **No commutativity requirement on individual events.** Two events that would need to commute in a traditional CRDT may or may not here — the linearized order decided which one comes first. `fold` is not a merge in the algebraic sense.
-- **No validation of whether an event should be applied.** Whether an event violates an invariant, whether a prior event supersedes it, whether a predicate rejects it — those checks live in the fold above (see [`fold.md`](fold.md)). The event's own `fold` assumes the caller decided to apply it.
+- **No validation of whether an event should be applied.** Whether an event violates an invariant or a prior event supersedes it — those concerns are handled by how the fold above is constructed (see [`fold.md`](fold.md)), not by the event's own `fold`. The event's `fold` assumes the caller decided to apply it.
 - **No sync or linearization logic.** Producing the total order is the sync protocol's job, described in [`sync.md`](sync.md). CRDTStore consumes that order and drives the fold. The two concerns are adjacent, not the same.
 
 ## Linearize-during-sync
@@ -48,7 +48,7 @@ Several properties follow from this shape:
 
 - **Operations need not commute.** Events arrive already ordered by sync. Two events that would need to commute in a traditional CRDT may or may not here — it does not matter, because sync decided which one comes first.
 - **No per-event causal metadata.** Causal context, if needed, is a property of the sync protocol's ordering or of the event type itself, not an input to `fold`.
-- **Validation is not part of fold-on-event.** Whether an event should be applied at all — whether it violates an invariant, whether a prior event supersedes it — is a fold-level concern (see [`fold.md`](fold.md)). The event's fold assumes it is one the caller has decided to apply.
+- **Invariant-encoding is not part of fold-on-event.** How an invariant is enforced — by construction in the composed fold above, or by user-added predicates on top — is a fold-level concern (see [`fold.md`](fold.md)). The event's `fold` assumes it is one the caller is applying.
 
 ### Composition of event types
 
@@ -60,7 +60,7 @@ This is how last-writer-wins registers, additive counters, and sequence algorith
 
 ### Optional invertibility
 
-For some fold-caching strategies (see [`fold.md`](fold.md)), it is useful to be able to invert an event — apply its opposite to undo its effect on state. Where events are naturally invertible (a counter increment can be inverted to a decrement; an LWW write can be inverted back to its prior value if that value is known), this would become an optional extension to the foldable event trait rather than a core requirement. Whether the stack commits to this extension depends on the broader fold-caching design (see [`fold.md`](fold.md)), which is open.
+For some use cases (log compaction, undo/redo tail access — see [`fold.md`](fold.md)), it is useful to be able to invert an event — apply its opposite to undo its effect on state. Where events are naturally invertible (a counter increment can be inverted to a decrement; an LWW write can be inverted back to its prior value if that value is known), this would become an optional extension to the foldable event trait rather than a core requirement. Whether the stack commits to this extension depends on how those broader design questions settle; it is open.
 
 ## Semantic priority is a property of the event type
 
@@ -70,17 +70,17 @@ This separation keeps the foldable event trait simple and keeps the sync protoco
 
 ## Relationship to other layers
 
-- **Downward to RelationalStore.** Once a sequence has been linearized and the fold has decided which events to apply, CRDTStore is transparent. Events flow through to RelationalStore, which updates its structural state (primary data, secondary indices, schema).
+- **Downward to RelationalStore.** Once a sequence has been linearized and fold has produced the next state, CRDTStore is transparent. The constructed state flows through to RelationalStore, which exposes primary data, secondary indices, and schema as a structured view.
 - **Upward to Partitioning.** CRDTStore does not open sockets. It produces outbound intents — sync messages to send to named peers — and receives inbound messages as state machine inputs. Partitioning (and the security layer at its boundary) handles transport. See [`partitioning.md`](partitioning.md).
 - **Sideward to the fold.** The fold is not a separate layer; it is the read-path construction logic that runs over the linearized sequence CRDTStore produces. See [`fold.md`](fold.md).
 
 ## Cross-peer invariants
 
-Invariants that span peers — uniqueness, non-negative balances, referential integrity — are not enforced inside CRDTStore. They are enforced as predicates evaluated by the fold as it processes the linearized sequence. Because the sequence is deterministic and all peers fold it identically, all peers make the same accept-or-skip decision for every event.
+Invariants that span peers — uniqueness, referential integrity — are not enforced inside CRDTStore. They are encoded in how the fold above is constructed. Because the linearized sequence is deterministic and all peers fold it identically, all peers produce the same state, and invariants follow from the fold's construction rather than from cross-peer coordination.
 
-Linearization is the coordination mechanism. It eliminates the need for reservations, compensations, or consensus protocols as separate systems — those exist in traditional CRDT systems precisely because partial orders make per-peer predicate evaluation inconsistent. With a total order, the predicate evaluates to the same result everywhere.
+Linearization is the coordination mechanism. It eliminates the need for reservations, compensations, or consensus protocols as separate systems — those exist in traditional CRDT systems precisely because partial orders make per-peer decisions inconsistent. With a total order, the fold's state evolves identically at every peer.
 
-Evaluation happens in the fold because that is where the state against which the predicate is checked actually exists. See [`fold.md`](fold.md).
+The fold is where invariants live because that is where state is constructed. See [`fold.md`](fold.md).
 
 ## Contract and invariants
 
@@ -93,6 +93,5 @@ Evaluation happens in the fold because that is where the state against which the
 
 - **Exact shape of the foldable event trait.** The skeleton — an event folds into a state — is the committed form. Associated types versus generic parameters, lifetime parameters on state references, whether `fold` has a return value, and similar refinements are trait-design decisions that affect ergonomics but not the core contract.
 - **Semantic priority mechanism.** How each event exposes its semantic priority — a numeric field, a trait method, a derive macro over an enum — is unresolved. The choice affects how application code defines new event types.
-- **Rejection representation.** When the fold skips an event because a predicate rejects it, how that skip is represented in the downstream constructed state is an open design question. Options include marking the event as skipped in the log, replacing it with a no-op, or purely omitting its effect from state.
 - **Compound event decomposition.** A single input to the state machine may represent a logically compound event that internally affects multiple fields or multiple domain objects. Whether the fold sees compound events as atomic units or as decomposed sub-events is a trait-design decision.
 - **Invertibility contract.** For implementations that support inversion, the exact shape of the invert operation (returns an inverse event, applies the inverse in place, produces a diff) is undecided.

@@ -32,7 +32,7 @@ Three properties hold throughout:
 
 1. **Synchronous.** A step runs to completion before the next step is accepted. There is no `async`, no threading, no channel, no blocking call anywhere in the stack.
 2. **Deterministic.** Given the same sequence of inputs, the stack produces the same sequence of state transitions and outputs. There is no hidden randomness, no time dependence, no concurrency inside.
-3. **Total.** Every input to the stack produces a transition. Conditions that look like errors are either normal (an operation rejected by a predicate, returning `None` where a method's signature has an `Option` return) or truly fatal (see the error model below).
+3. **Total.** Every input to the stack produces a transition. A step that has nothing to do returns `None` where the signature has an `Option` return; the state machine still advances. Truly fatal conditions (see the error model below) are separate.
 
 There is no universal wrapper around every return type. `Option<T>` is a per-method choice.
 
@@ -46,9 +46,9 @@ Externally observable mutation is confined to `PageStore` — see ARCHITECTURE.m
 
 ARCHITECTURE.md invariant 4 states the rule: no soft errors; if it is not fatal, recover. What composition adds is that every condition that looks like an error has a distinct architectural home.
 
-- **Rejected by a predicate in the fold.** An operation is valid but is not applied — an invariant predicate in the fold skips an operation that would violate a cross-peer constraint. The state machine advances; the output is `None` where the signature has an `Option` return. This lives in the fold; see [`fold.md`](fold.md).
+- **Normal operation with an optional return.** A method whose signature declares `Option<T>` returns `None` when the operation has nothing to produce (e.g., a lookup for a missing key). The state machine advances; nothing failed.
 - **Rejected at the security boundary.** Malformed, unauthenticated, or protocol-invalid input is dropped at the network boundary, before entering the Partitioning state machine. Only verified inputs pass through. See [`partitioning.md`](partitioning.md).
-- **Truly fatal.** The process terminates. Recovery is a restart; how the stack reconstructs state on restart is a cross-cutting recovery-strategy question, with pure log replay as the baseline (see [`fold.md`](fold.md)).
+- **Truly fatal.** The process terminates. State persists synchronously through the stack, so restart reconstructs the upper layers from what `PageStore` holds; see [`fold.md`](fold.md).
 
 There is no `Result<T, E>` on the hot path. Soft-error variants propagate silently and branch every caller; the architecture prefers loud failures that restart against silent corruption.
 

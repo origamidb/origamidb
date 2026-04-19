@@ -35,7 +35,7 @@ PageStore is responsible for durability: if it returns success on a write, the b
 
 Atomicity of a multi-page write — where either all pages persist or none do — is a contract between PageStore and the layer immediately above. A KV operation that needs to update several pages atomically (a B-tree node split, an LSM flush) submits the change as a batch; PageStore either commits the batch or returns the store to its pre-batch state on crash.
 
-Atomicity across layers is not PageStore's concern. Because the stack is a synchronous state machine, only one operation is ever in flight at a time. A compound change that spans multiple layers is a single step of the state machine; if the step completes, every layer's page-level effects have been committed through PageStore. If the step does not complete, the process recovers from the last durable checkpoint.
+Atomicity across layers is not PageStore's concern. Because the stack is a synchronous state machine, only one operation is ever in flight at a time. A compound change that spans multiple layers is a single step of the state machine; if the step completes, every layer's page-level effects have been committed through PageStore. If the step does not complete, PageStore's contract rolls the store back to its pre-step state; the upper layers reconstruct from there on restart.
 
 ## Allocation-free operation
 
@@ -63,5 +63,5 @@ What is fixed: PageStore's contract is the boundary. Everything durable is route
 - **Batch contract.** How multi-page atomic writes are expressed in the trait. Options include an explicit batch type, a transactional wrapper, or a convention that a single method call is atomic.
 - **Iteration.** Whether PageStore exposes ordered iteration over pages it owns, or whether iteration is a pure KVStore concern expressed over random-access reads.
 - **Page allocation.** Whether new pages are requested from PageStore (and returned on deletion) or whether the upper layer manages a free list over a fixed region.
-- **Crash recovery protocol.** What the upper layers do on restart to reconstruct state — pure log replay (the baseline), checkpoint-based resume, or some other mechanism — is a cross-cutting recovery-strategy concern. The specifics are entangled with log compaction and undo/redo support; see [`fold.md`](fold.md).
+- **Crash recovery protocol.** The upper layers reconstruct from the durable state `PageStore` holds (see [`fold.md`](fold.md)). How that reconstruction is expressed in the trait surface — what `PageStore` exposes to support it, and how the upper layers consume it — is a trait-design question entangled with log compaction and undo/redo support.
 - **Error surface.** PageStore runs inside the state machine, where soft errors do not exist. A write that cannot be committed (hardware failure, medium failure) is fatal and causes the process to terminate; the stack then recovers by restart. Whether the trait signature expresses this by returning `()` on success and panicking on fatal failure, or by a richer type that higher layers treat as uninhabited, is a trait-design question.

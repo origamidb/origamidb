@@ -72,4 +72,4 @@ See [`fold.md`](fold.md) for the full treatment of how state is constructed.
 - **Composite and functional indices.** Whether indices over multiple fields or over computed expressions are first-class.
 - **Secondary index invalidation under schema change.** When a schema change affects a field that has a secondary index, what the index represents during and after the change is a design decision.
 - **Relationship to query planning.** Whether RelationalStore exposes primitives that a query planner can compose (index scans, joins) or whether planning is entirely above the trait.
-- **Cross-table references.** Whether foreign-key-like relationships are recognized by the relational layer (allowing the fold to enforce referential integrity as a predicate) or handled entirely in the application layer.
+- **Cross-table references.** Whether foreign-key-like relationships are recognized by the relational layer (so the fold can encode referential integrity in its construction) or handled entirely in the application layer.

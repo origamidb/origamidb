@@ -1,6 +1,6 @@
 # Sync
 
-Sync is the protocol by which peers exchange events and converge on a single, totally ordered log. It is the work that makes every other design decision in the architecture possible: once sync has produced a deterministic total order, the fold simplifies to a sequential step-per-event, cross-peer invariants become per-step predicates, and the fold's trait contract stays small.
+Sync is the protocol by which peers exchange events and converge on a single, totally ordered log. It is the work that makes every other design decision in the architecture possible: once sync has produced a deterministic total order, the fold simplifies to a sequential step-per-event, cross-peer invariants are encoded in the fold's construction, and the fold's trait contract stays small.
 
 The specifics of the sync protocol — how the causal DAG is structured, what the ordering function operates on, how peers negotiate what to exchange — are pending detailed specification. This page describes the shape the protocol takes and the properties it must satisfy.
 
